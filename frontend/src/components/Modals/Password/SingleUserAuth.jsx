@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import System from "../../../models/system";
 import { AUTH_TOKEN } from "../../../utils/constants";
 import paths from "../../../utils/paths";
@@ -6,9 +6,13 @@ import ModalWrapper from "@/components/ModalWrapper";
 import { useModal } from "@/hooks/useModal";
 import RecoveryCodeModal from "@/components/Modals/DisplayRecoveryCodeModal";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/AuthContext";
 
 export default function SingleUserAuth() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { actions } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [recoveryCodes, setRecoveryCodes] = useState([]);
@@ -37,8 +41,8 @@ export default function SingleUserAuth() {
         setRecoveryCodes(recoveryCodes);
         openRecoveryCodeModal();
       } else {
-        window.localStorage.setItem(AUTH_TOKEN, token);
-        window.location = paths.home();
+        actions.updateUser(null, token);
+        navigate(paths.home());
       }
     } else {
       setError(message);
@@ -53,8 +57,8 @@ export default function SingleUserAuth() {
 
   useEffect(() => {
     if (downloadComplete && token) {
-      window.localStorage.setItem(AUTH_TOKEN, token);
-      window.location = paths.home();
+      actions.updateUser(null, token);
+      navigate(paths.home());
     }
   }, [downloadComplete, token]);
 

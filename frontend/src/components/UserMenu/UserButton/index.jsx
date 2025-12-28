@@ -5,8 +5,10 @@ import System from "@/models/system";
 import paths from "@/utils/paths";
 import { userFromStorage } from "@/utils/request";
 import { Person } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import AccountModal from "../AccountModal";
+import { AuthContext } from "@/AuthContext";
+import { useNavigate } from "react-router-dom";
 import {
   AUTH_TIMESTAMP,
   AUTH_TOKEN,
@@ -20,6 +22,8 @@ export default function UserButton() {
   const { t } = useTranslation();
   const mode = useLoginMode();
   const { user } = useUser();
+  const { actions } = useContext(AuthContext);
+  const navigate = useNavigate();
   const menuRef = useRef();
   const buttonRef = useRef();
   const [showMenu, setShowMenu] = useState(false);
@@ -94,12 +98,9 @@ export default function UserButton() {
             </a>
             <button
               onClick={() => {
-                window.localStorage.removeItem(AUTH_USER);
-                window.localStorage.removeItem(AUTH_TOKEN);
-                window.localStorage.removeItem(AUTH_TIMESTAMP);
+                actions.unsetUser();
                 window.localStorage.removeItem(LAST_VISITED_WORKSPACE);
-                window.localStorage.removeItem(USER_PROMPT_INPUT_MAP);
-                window.location.replace(paths.home());
+                navigate(paths.home());
               }}
               type="button"
               className="text-white hover:bg-theme-action-menu-item-hover w-full text-left px-4 py-1.5 rounded-md"

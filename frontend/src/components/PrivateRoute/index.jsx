@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
+import { AuthContext } from "@/AuthContext";
 import { FullScreenLoader } from "../Preloader";
 import validateSessionTokenForUser from "@/utils/session";
 import paths from "@/utils/paths";
@@ -12,6 +13,7 @@ import { KeyboardShortcutWrapper } from "@/utils/keyboardShortcuts";
 // Used only for Multi-user mode only as we permission specific pages based on auth role.
 // When in single user mode we just bypass any authchecks.
 function useIsAuthenticated() {
+  const { store } = useContext(AuthContext);
   const [isAuthd, setIsAuthed] = useState(null);
   const [shouldRedirectToOnboarding, setShouldRedirectToOnboarding] =
     useState(false);
@@ -77,7 +79,7 @@ function useIsAuthenticated() {
       setIsAuthed(true);
     };
     validateSession();
-  }, []);
+  }, [store.authToken]);
 
   return { isAuthd, shouldRedirectToOnboarding, multiUserMode };
 }

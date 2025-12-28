@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import System from "../../../models/system";
 import { AUTH_TOKEN, AUTH_USER } from "../../../utils/constants";
 import paths from "../../../utils/paths";
@@ -8,6 +8,8 @@ import { useModal } from "@/hooks/useModal";
 import RecoveryCodeModal from "@/components/Modals/DisplayRecoveryCodeModal";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/AuthContext";
 
 const RecoveryForm = ({ onSubmit, setShowRecoveryForm }) => {
   const [username, setUsername] = useState("");
@@ -167,6 +169,8 @@ const ResetPasswordForm = ({ onSubmit }) => {
 
 export default function MultiUserAuth() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { actions } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [recoveryCodes, setRecoveryCodes] = useState([]);
@@ -200,9 +204,8 @@ export default function MultiUserAuth() {
         setRecoveryCodes(recoveryCodes);
         openRecoveryCodeModal();
       } else {
-        window.localStorage.setItem(AUTH_USER, JSON.stringify(user));
-        window.localStorage.setItem(AUTH_TOKEN, token);
-        window.location = paths.home();
+        actions.updateUser(user, token);
+        navigate(paths.home());
       }
     } else {
       setError(message);
@@ -252,9 +255,8 @@ export default function MultiUserAuth() {
 
   useEffect(() => {
     if (downloadComplete && user && token) {
-      window.localStorage.setItem(AUTH_USER, JSON.stringify(user));
-      window.localStorage.setItem(AUTH_TOKEN, token);
-      window.location = paths.home();
+      actions.updateUser(user, token);
+      navigate(paths.home());
     }
   }, [downloadComplete, user, token]);
 
