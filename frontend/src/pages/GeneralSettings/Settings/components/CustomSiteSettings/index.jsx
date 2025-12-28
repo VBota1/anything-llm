@@ -11,6 +11,18 @@ export default function CustomSiteSettings() {
     faviconUrl: null,
   });
 
+  const getFaviconSrc = (url) => {
+    if (!url) {
+      const baseUrl = import.meta.env.VITE_API_BASE || "/";
+      return baseUrl === "/"
+        ? "/favicon.png"
+        : `${baseUrl}/favicon.png`.replace("//", "/");
+    }
+    return url;
+  };
+
+  const defaultFavicon = getFaviconSrc(null);
+
   useEffect(() => {
     Admin.systemPreferences().then(({ settings }) => {
       setSettings({
@@ -84,8 +96,8 @@ export default function CustomSiteSettings() {
         </p>
         <div className="flex items-center gap-x-2">
           <img
-            src={settings.faviconUrl ?? "/favicon.png"}
-            onError={(e) => (e.target.src = "/favicon.png")}
+            src={getFaviconSrc(settings.faviconUrl)}
+            onError={(e) => (e.target.src = defaultFavicon)}
             className="h-10 w-10 rounded-lg mt-2"
             alt="Site favicon"
           />
