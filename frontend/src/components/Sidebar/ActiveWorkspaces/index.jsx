@@ -94,18 +94,22 @@ export default function ActiveWorkspaces() {
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      className={`flex flex-col w-full group ${
-                        snapshot.isDragging ? "opacity-50" : ""
-                      }`}
+                      className={`flex flex-col w-full group ${snapshot.isDragging ? "opacity-50" : ""
+                        }`}
                       role="listitem"
                     >
                       <div className="flex gap-x-2 items-center justify-between">
                         <a
                           href={
                             isActive
-                              ? null
+                              ? "#"
                               : paths.workspace.chat(workspace.slug)
                           }
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (isActive) return;
+                            navigate(paths.workspace.chat(workspace.slug));
+                          }}
                           data-tooltip-id="workspace-name"
                           data-tooltip-content={workspace.name}
                           aria-current={isActive ? "page" : ""}
@@ -164,8 +168,8 @@ export default function ActiveWorkspaces() {
                                       isInWorkspaceSettings
                                         ? paths.workspace.chat(workspace.slug)
                                         : paths.workspace.settings.generalAppearance(
-                                            workspace.slug
-                                          )
+                                          workspace.slug
+                                        )
                                     );
                                   }}
                                   className="rounded-md flex items-center justify-center text-[#A7A8A9] hover:text-white ml-auto p-[2px] hover:bg-[#646768]"
@@ -174,7 +178,7 @@ export default function ActiveWorkspaces() {
                                   <GearSix
                                     color={
                                       isInWorkspaceSettings &&
-                                      workspace.slug === slug
+                                        workspace.slug === slug
                                         ? "#46C8FF"
                                         : undefined
                                     }
