@@ -140,6 +140,8 @@ WORKDIR /app
 # The output (static HTML/CSS/JS) is platform-independent.
 FROM --platform=$BUILDPLATFORM node:18-slim AS frontend-build
 WORKDIR /app/frontend
+ARG VITE_API_BASE
+ENV VITE_API_BASE=$VITE_API_BASE
 COPY ./frontend/package.json ./frontend/yarn.lock ./
 RUN yarn install --network-timeout 100000 && yarn cache clean
 COPY ./frontend/ ./

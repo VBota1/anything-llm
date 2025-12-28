@@ -382,7 +382,9 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+], {
+  basename: import.meta.env.VITE_API_BASE || "/"
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <REACTWRAP>

@@ -1,3 +1,5 @@
+const path = require("path");
+const BASE_PATH = process.env.LLM_BASE_PATH || "/";
 /**
  * @typedef MetaTagDefinition
  * @property {('link'|'meta')} tag - the type of meta tag element
@@ -53,7 +55,7 @@ class MetaGenerator {
     return [
       {
         tag: "link",
-        props: { type: "image/svg+xml", href: "/favicon.png" },
+        props: { type: "image/svg+xml", href: path.posix.join(BASE_PATH, "/favicon.png") },
         content: null,
       },
       {
@@ -138,8 +140,8 @@ class MetaGenerator {
         },
       },
 
-      { tag: "link", props: { rel: "icon", href: "/favicon.png" } },
-      { tag: "link", props: { rel: "apple-touch-icon", href: "/favicon.png" } },
+      { tag: "link", props: { rel: "icon", href: path.posix.join(BASE_PATH, "/favicon.png") } },
+      { tag: "link", props: { rel: "apple-touch-icon", href: path.posix.join(BASE_PATH, "/favicon.png") } },
 
       // PWA specific tags
       {
@@ -157,7 +159,7 @@ class MetaGenerator {
           content: "black-translucent",
         },
       },
-      { tag: "link", props: { rel: "manifest", href: "/manifest.json" } },
+      { tag: "link", props: { rel: "manifest", href: path.posix.join(BASE_PATH, "/manifest.json") } },
     ];
   }
 
@@ -188,12 +190,12 @@ class MetaGenerator {
   }
 
   #validUrl(faviconUrl = null) {
-    if (faviconUrl === null) return "/favicon.png";
+    if (faviconUrl === null) return path.posix.join(BASE_PATH, "/favicon.png");
     try {
       const url = new URL(faviconUrl);
       return url.toString();
     } catch {
-      return "/favicon.png";
+      return path.posix.join(BASE_PATH, "/favicon.png");
     }
   }
 
@@ -311,8 +313,8 @@ class MetaGenerator {
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             ${this.#assembleMeta()}
-            <script type="module" crossorigin src="/index.js"></script>
-            <link rel="stylesheet" href="/index.css">
+            <script type="module" crossorigin src="${path.posix.join(BASE_PATH, "/index.js")}"></script>
+            <link rel="stylesheet" href="${path.posix.join(BASE_PATH, "/index.css")}">
           </head>
           <body>
             <div id="root" class="h-screen"></div>
@@ -337,13 +339,13 @@ class MetaGenerator {
         null
       );
 
-      let iconUrl = "/favicon.png";
+      let iconUrl = path.posix.join(BASE_PATH, "/favicon.png");
       if (faviconURL) {
         try {
           new URL(faviconURL);
           iconUrl = faviconURL;
         } catch {
-          iconUrl = "/favicon.png";
+          iconUrl = path.posix.join(BASE_PATH, "/favicon.png");
         }
       }
 

@@ -33,6 +33,7 @@ const { httpLogger } = require("./middleware/httpLogger");
 const app = express();
 const apiRouter = express.Router();
 const FILE_LIMIT = "3GB";
+const BASE_PATH = process.env.LLM_BASE_PATH || "/";
 
 // Only log HTTP requests in development mode and if the ENABLE_HTTP_LOGGER environment variable is set to true
 if (
@@ -61,7 +62,7 @@ if (!!process.env.ENABLE_HTTPS) {
   require("@mintplex-labs/express-ws").default(app); // load WebSockets in non-SSL mode.
 }
 
-app.use("/api", apiRouter);
+app.use(path.posix.join(BASE_PATH, "/api"), apiRouter);
 systemEndpoints(apiRouter);
 extensionEndpoints(apiRouter);
 workspaceEndpoints(apiRouter);
@@ -91,6 +92,7 @@ if (process.env.NODE_ENV !== "development") {
   const IndexPage = new MetaGenerator();
 
   app.use(
+    BASE_PATH,
     express.static(path.resolve(__dirname, "public"), {
       extensions: ["js"],
       setHeaders: (res) => {
@@ -101,17 +103,18 @@ if (process.env.NODE_ENV !== "development") {
     })
   );
 
-  app.get("/robots.txt", function (_, response) {
+
+  app.get(path.posix.join(BASE_PATH, "/robots.txt"), function (_, response) {
     response.type("text/plain");
     response.send("User-agent: *\nDisallow: /").end();
   });
 
-  app.get("/manifest.json", async function (_, response) {
+  app.get(path.posix.join(BASE_PATH, "/manifest.json"), async function (_, response) {
     IndexPage.generateManifest(response);
     return;
   });
 
-  app.use("/", function (_, response) {
+  app.use(BASE_PATH, function (_, response) {
     IndexPage.generate(response);
     return;
   });

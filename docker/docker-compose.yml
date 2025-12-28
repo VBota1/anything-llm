@@ -13,8 +13,11 @@ services:
       args:
         ARG_UID: ${UID:-1000}
         ARG_GID: ${GID:-1000}
+        VITE_API_BASE: ${VITE_API_BASE:-/}
     cap_add:
       - SYS_ADMIN
+    environment:
+      - LLM_BASE_PATH=${LLM_BASE_PATH:-/}
     volumes:
       - "./.env:/app/server/.env"
       - "../server/storage:/app/server/storage"

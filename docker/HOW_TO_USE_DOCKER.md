@@ -168,6 +168,31 @@ After setting that up install the AnythingLLM docker backend to the Midori AI Su
 
 Once that is done, you are all set!
 
+## Running from a subpath
+
+If you want to host AnythingLLM from a subpath (e.g., `http://domain.com/my-llm` instead of `http://domain.com`), you need to set two environment variables:
+
+- `VITE_API_BASE`: The base path for the frontend (e.g., `/my-llm`)
+- `LLM_BASE_PATH`: The base path for the server (e.g., `/my-llm`)
+
+**Note:** `VITE_API_BASE` is a build-time argument for the frontend, while `LLM_BASE_PATH` is a runtime configuration for the backend. When using the provided Docker Compose setup, `VITE_API_BASE` is passed as a build argument.
+
+### Example (Docker Compose)
+
+Add the following to your `docker/.env` file:
+
+```env
+VITE_API_BASE='/my-llm'
+LLM_BASE_PATH='/my-llm'
+```
+
+Then rebuild and start the container:
+
+```bash
+cd docker
+docker-compose up -d --build
+```
+
 ## Common questions and fixes
 
 ### Cannot connect to service running on localhost!
