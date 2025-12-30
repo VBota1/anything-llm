@@ -19,7 +19,17 @@ const handledEvents = [
 export function websocketURI() {
   const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
   if (API_BASE === "/api") return `${wsProtocol}//${window.location.host}`;
-  return `${wsProtocol}//${new URL(import.meta.env.VITE_API_BASE).host}`;
+
+  const viteBase = import.meta.env.VITE_API_BASE;
+  if (viteBase && viteBase.startsWith("/")) {
+    return `${wsProtocol}//${window.location.host}${viteBase}`;
+  }
+
+  try {
+    return `${wsProtocol}//${new URL(viteBase).host}`;
+  } catch {
+    return `${wsProtocol}//${window.location.host}`;
+  }
 }
 
 export default function handleSocketResponse(socket, event, setChatHistory) {
@@ -132,10 +142,10 @@ export default function handleSocketResponse(socket, event, setChatHistory) {
             .map((msg) =>
               msg.uuid === uuid
                 ? {
-                    ...msg,
-                    type: "textResponse",
-                    content: msg.content + content,
-                  }
+                  ...msg,
+                  type: "textResponse",
+                  content: msg.content + content,
+                }
                 : msg?.content
                   ? msg
                   : null
