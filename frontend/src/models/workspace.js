@@ -262,7 +262,10 @@ const Workspace = {
   },
 
   getParsedFiles: async function (slug, threadSlug = null) {
-    const basePath = new URL(`${fullApiUrl()}/workspace/${slug}/parsed-files`);
+    const basePath = new URL(
+      `${fullApiUrl()}/workspace/${slug}/parsed-files`,
+      window.location.origin
+    );
     if (threadSlug) basePath.searchParams.set("threadSlug", threadSlug);
     const response = await fetch(basePath, {
       method: "GET",

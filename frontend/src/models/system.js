@@ -20,7 +20,7 @@ const System = {
       .catch(() => false);
   },
   totalIndexes: async function (slug = null) {
-    const url = new URL(`${fullApiUrl()}/system/system-vectors`);
+    const url = new URL(`${fullApiUrl()}/system/system-vectors`, window.location.origin);
     if (!!slug) url.searchParams.append("slug", encodeURIComponent(slug));
     return await fetch(url.toString(), {
       headers: baseHeaders(),
@@ -396,7 +396,7 @@ const System = {
     }
   },
   fetchLogo: async function () {
-    const url = new URL(`${fullApiUrl()}/system/logo`);
+    const url = new URL(`${fullApiUrl()}/system/logo`, window.location.origin);
     url.searchParams.append(
       "theme",
       localStorage.getItem("theme") || "default"
@@ -636,7 +636,7 @@ const System = {
       });
   },
   exportChats: async (type = "csv", chatType = "workspace") => {
-    const url = new URL(`${fullApiUrl()}/system/export-chats`);
+    const url = new URL(`${fullApiUrl()}/system/export-chats`, window.location.origin);
     url.searchParams.append("type", encodeURIComponent(type));
     url.searchParams.append("chatType", encodeURIComponent(chatType));
     return await fetch(url, {
